@@ -23,7 +23,7 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
                                 # dcc.Dropdown(id='site-dropdown',...)
                                 dcc.Dropdown(id='site-dropdown',
                                              options = [
-                                                 {'label': 'All Sites', 'value': 'All'},
+                                                 {'label': 'All Sites', 'value': 'ALL'},
                                                  {'label': 'CCAFS LC-40', 'value': 'CCAFS LC-40'},
                                                  {'label': 'VAFB SLC-4E', 'value': 'VAFB SLC-4E'},
                                                  {'label': 'KSC LC-39A', 'value': 'KSC LC-39A'},
@@ -65,7 +65,7 @@ def get_pie_chart(entered_site):
     if entered_site == 'ALL':
         fig = px.pie(spacex_df, values='class', 
         names='Launch Site', 
-        title='Total Success Launches By Sites')
+        title='Total Success Launches By all sites')
         return fig
     else:
         # return the outcomes piechart for a selected site
@@ -80,8 +80,9 @@ def get_pie_chart(entered_site):
                 Input(component_id="payload-slider", component_property="value")])
 def get_scatter_chart(entered_site, payloads):
     filtered_df = spacex_df[(spacex_df['Launch Site'] == entered_site) & (spacex_df['Payload Mass (kg)'] >= payloads[0]) & (spacex_df['Payload Mass (kg)'] <= payloads[1])]
+    allsites_df = spacex_df[(spacex_df['Payload Mass (kg)'] >= payloads[0]) & (spacex_df['Payload Mass (kg)'] <= payloads[1])]
     if entered_site == 'ALL':
-        fig = px.scatter(spacex_df, y='class', x='Payload Mass (kg)', 
+        fig = px.scatter(allsites_df, y='class', x='Payload Mass (kg)', color='Launch Site',
         title='Correlation between Payload and Success for all Sites')
         return fig
     else:
